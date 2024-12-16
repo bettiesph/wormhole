@@ -1,30 +1,32 @@
 linters:
-  # Disable all linters.
-  # Default: false
+  # Отключаем все линтеры для явного включения нужных
   disable-all: true
-  # Enable specific linter
-  # https://golangci-lint.run/usage/linters/#enabled-by-default-linters
-  enable:
-  # default linters
-    - errcheck
-    - gosimple
-    - govet
-    - ineffassign
-    - staticcheck
-    - typecheck
-    - unused
 
-  # additional linters
-    - gosec
-    - forcetypeassert
-    # - contextcheck # disabled in CI for now because fixes to findings need additional work
-    - noctx
-    # - unconvert # disable because extra conversion typically don't hurt but can make code more clear
-    - unparam
-    - prealloc
+  # Включаем только нужные линтеры для улучшения качества кода
+  enable:
+    # Основные линтеры для стандартных проверок
+    - errcheck          # Проверка на необработанные ошибки
+    - gosimple          # Упрощение кода
+    - govet             # Стандартная проверка Go
+    - ineffassign       # Поиск неэффективных присваиваний
+    - staticcheck       # Статический анализ
+    - typecheck         # Проверка типов
+    - unused            # Поиск неиспользуемых переменных и функций
+
+    # Дополнительные линтеры для безопасности и стиля
+    - gosec             # Поиск уязвимостей
+    - forcetypeassert   # Проверка на принудительные приведения типов
+    # - contextcheck     # Отключен для CI, так как требует дополнительной работы
+    - noctx             # Проверка на использование контекстов
+    # - unconvert        # Отключен, так как избыточные преобразования типов не всегда мешают
+    - unparam           # Поиск неиспользуемых параметров функций
+    - prealloc          # Предупреждения по выделению памяти
+
 issues:
+  # Исключаем линтеры для конкретных случаев
   exclude-rules:
     - path: pkg/supervisor/supervisor_testhelpers.go
+      # Исключаем линтер unused для функций, которые могут не использовать переменные
       text: "^func.*supervisor.*(waitSettle|waitSettleError).*$"
       linters:
         - unused
